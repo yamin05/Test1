@@ -1,0 +1,153 @@
+<shortcut></shortcut>
+<div class="row-fluid">
+    <div class="span3">
+        <div class="well sidebar-nav sidebar-nav-fixed">
+            <ul class="nav nav-list">
+                <li style="font-size:14px;color:#666" class="dropdown nav-header inline">{{project.title}}</li>
+                <li>
+                    <div class="btn-toolbar">
+                        <div class="btn-group">
+                            <button class="btn" ng-click="refresh()" title="Click to refresh">{{taskType |
+                                taskTypeText}}
+                            </button>
+                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="" ng-click="switchToType('pending_high')">Pending (High)</a></li>
+                                <li><a href="" ng-click="switchToType('pending')">Pending</a></li>
+                                <li><a href="" ng-click="switchToType('complete')">Complete</a></li>
+                                <li><a href="" ng-click="switchToType('all_tasks')">All Tasks</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-header">Sort <i class="{{ sortClass() }} icon-white"/></li>
+                <li>
+                    <div class="btn-toolbar" style="margin: 0 0 0px">
+                        <div class="btn-group">
+                            <button class="btn" ng-click="toggleSort()" title="Click to toggle sort">{{orderBy |
+                                orderByText}}
+                            </button>
+                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="" ng-click="switchToSortType(0)">Priority</a></li>
+                                <li><a href="" ng-click="switchToSortType(1)">Creation Date</a></li>
+                                <li><a href="" ng-click="switchToSortType(2)">Last Update Date</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-header"><i class="icon-search icon-white"></i>&nbsp;Search</li>
+                <li>
+                    <form ng-submit="search()" style="margin: 0 0 0px">
+                        <div class="input-append input-block-level">
+                            <input id="searchInput" type="text" ng-model="text" class="span9" focus-me name="text"
+                                   placeholder="Enter text to search"/>
+						<span style="cursor: pointer" ng-click="text='';search();"
+                              class="add-on"><i class="icon-remove-sign"></i></span>
+                        </div>
+                    </form>
+                </li>
+                <li class="nav-header">Total: {{totalItems}}</li>
+                <li class="nav-header" style="margin-bottom:10px">&nbsp;</li>
+                <li class="divider"></li>
+                <li><a class="nav-header" style="cursor:pointer" title="Keyboard shortcut : Ctrl + Enter"
+                       href="#/task/{{project.id}}/">Add New Task</a></li>
+                <li><a class="nav-header" style="cursor:pointer" href="#/versions/{{project.id}}/">Project Versions</a>
+                </li>
+                <li><a class="nav-header" ng-show="project.canEditProject" style="cursor:pointer"
+                       href="#/project/{{project.id}}/">Update Project Info</a></li>
+            </ul>
+        </div>
+        <!--/.well -->
+    </div>
+    <!--/span-->
+    <div class="span9" infinite-scroll="loadPage()" infinite-scroll-disabled="scrollDisabled()"
+         infinite-scroll-distance="2">
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+        <table class="table table-hover table-fixed-header">
+            <tbody>
+            <tr ng-repeat="item in items" class="task" context-menu="contextMenu" context-menu-click="menuClick(item)"
+                context-menu-show="isCreator || isAssignee || loggedUser.isAdmin || loggedUser.isManager">
+                <td style="width:100%; cursor:pointer" data-toggle="collapse" data-target="#collapse{{$index}}">
+                    <span ng-bind-html-unsafe="item.summary | highlight:searchText"></span>
+
+                    <p class="meta" style="margin-top:6px">
+							<span class="task-priority task-{{item.priority | priorityText | lowercase}}"
+                                  title="{{item.priority | priorityText}}">
+								<span ng-show="item.urgent && item.priority == 5" class="label label-important"
+                                      style="line-height:9px;font-size:9px">urgent</span>&nbsp;
+								<span ng-show="item.minor && item.priority == 5" class="label label-success"
+                                      style="line-height:9px;font-size:9px">minor</span>&nbsp;
+								<span style="color:#666;" ng-bind-html-unsafe="item.id | highlight:searchText"></span>
+								<span style="margin-left:10px;color:{{item.taskStatus | statusColor}};"
+                                      ng-bind-html-unsafe="item.taskStatus | statusText"></span>
+							</span>
+							<span class="task-contact" ng-show="item.assignedTo">
+									<span ng-bind-html-unsafe="item.createdBy.name | highlight:searchText"></span>
+									&nbsp;&rarr;&nbsp;
+                                    <span ng-repeat="tu in item.assignedTo | orderBy:'assignee.name'">
+                                        <span><a href="#/user-tasks/{{tu.assignee.id}}/{{item.id}}"
+                                                 ng-bind-html-unsafe="tu.assignee.name | highlight:searchText"></a><span
+                                                ng-hide="$last">, </span></span>
+                                    </span>
+							</span>
+							<span class="task-contact" ng-hide="item.assignedTo"
+                                  ng-bind-html-unsafe="item.createdBy.name | highlight:searchText">
+							</span>
+							<span class="task-date" ng-show="item.dateLastUpdated"
+                                  title="{{item.dateLastUpdated | dateText}}">
+								Last updated {{item.dateLastUpdated | readableDate }} <span
+                                    ng-show="item.lastUpdatedBy">by {{item.lastUpdatedBy.name}}</span>
+							</span>
+							<span class="task-date" ng-show="item.dateCompleted"
+                                  title="{{item.dateCompleted | dateText}}">
+								Finished {{item.dateCompleted | readableDate }}
+							</span>
+                    </p>
+
+                    <div id="collapse{{$index}}" class="collapse" style="margin-top:10px;">
+					    	<span class="pull-right">
+						    	<a ng-show="isCreator || isAssignee || loggedUser.isAdmin || loggedUser.isManager"
+                                   ng-click="editTask($index)"><i class="icon-edit"></i>&nbsp;Edit</a>&nbsp;
+						    	<a ng-show="isCreator || loggedUser.isAdmin || loggedUser.isManager"
+                                   ng-click="deleteTask($index)"><i class="icon-remove"></i>&nbsp;Delete</a>
+					    	</span>
+                        <pre style="margin-top: 25px;color:#999" ng-hide="item.description || item.files.length">No details available.</pre>
+                        <pre style="margin-top: 25px;" ng-show="item.description || item.files.length"
+                             ng-bind-html-unsafe="item | details:searchText"></pre>
+                        <p class="meta" style="margin-top:6px">
+								<span class="task-date" ng-show="item.dateCreated"
+                                      title="{{item.dateCreated | dateText}}">
+									Created {{item.dateCreated | readableDate }} <span ng-show="item.createdBy">by {{item.createdBy.name}}</span>
+								</span>
+								<span class="task-date" ng-show="item.dateAssigned"
+                                      title="{{item.dateAssigned | dateText}}">
+									Task assigned {{item.dateAssigned | readableDate }}
+								</span>
+                        </p>
+                    </div>
+                </td>
+            </tr>
+            <tr ng-show="busy">
+                <td>Loading data ...</td>
+            </tr>
+            <tr ng-hide="busy || items.length">
+                <td>No items found.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <ul id="contextMenu" class="dropdown-menu" style="cursor:pointer">
+        <li ng-show="isCreator || isAssignee || loggedUser.isAdmin || loggedUser.isManager"><a ng-click="editTask()"><i
+                class="icon-edit"></i>&nbsp;Edit</a></li>
+        <li ng-show="isCreator || loggedUser.isAdmin || loggedUser.isManager"><a ng-click="deleteTask()"><i
+                class="icon-remove"></i>&nbsp;Delete</a></li>
+    </ul>
+</div>
+<!--/span-->
+</div>
+<!--/row-->

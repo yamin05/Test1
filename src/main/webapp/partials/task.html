@@ -1,0 +1,166 @@
+<div class="row-fluid">
+    <div class="span3">
+        <div class="sidebar-nav sidebar-nav-fixed" style="padding:0px;">
+            <div class="well" style="padding: 9px 0px 9px 0px;">
+                <ul class="nav nav-list">
+                    <li class="nav-header">Priority</li>
+                    <li>
+                        <div class="btn-toolbar">
+                            <div class="btn-group">
+                                <button class="btn">{{task.priority | priorityText}}&nbsp;</button>
+                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li ng-repeat="priority in priorityList"><a href="" ng-click="setPriority(priority)">{{priority | priorityText}}&nbsp;</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li ng-show="task.priority == 5">
+                        <div class="btn-toolbar">
+                            <button type="button" class="btn inline" ng-model="task.urgent" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false">
+                                <span class="label" ng-class="{'label-important': task.urgent}" style="line-height:13px;font-size:10px">urgent</span>
+                            </button>
+                            <button type="button" class="btn inline" ng-model="task.minor" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false">
+                                <span class="label" ng-class="{'label-success': task.minor}" style="line-height:13px;font-size:10px">minor</span>
+                            </button>
+                        </div>
+                    </li>
+                    <li class="nav-header">Status</li>
+                    <li>
+                        <div class="btn-toolbar">
+                            <div class="btn-group">
+                                <button class="btn">{{task.taskStatus | statusText}}&nbsp;</button>
+                                <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li ng-repeat="status in statusList"><a href="" ng-click="setStatus(status)">{{status | statusText}}&nbsp;</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="nav-header" ng-show="showEstimatedCompletionDate()">Est. Completion Date</li>
+                    <li ng-show="showEstimatedCompletionDate()">
+                        <div class="input-append date">
+                            <input class="span7" type="text"
+                                   ui-date="dateOptions" ng-model="task.dateDue">
+                            <span style="cursor: pointer" ng-click="task.dateDue=null" class="add-on"><i class="icon-remove-sign"></i></span>
+                        </div>
+                    </li>
+                    <li><label class="checkbox muted"><small><input ng-model="task.excludeFromChangeLog" type="checkbox">Exclude from changelog</small></label></li>
+                </ul>
+            </div>
+            <div id="uploadManager">
+                <div class="well muted" id="noUploadZone" data-toggle="modal" data-target="#uploadBox" style="cursor:pointer" title="Click here to launch upload manager">
+                    <small>{{ fileInfo }}</small><br ng-show="fileInfo"/>
+                    <small>{{ uploadManagerBtnText }}</small>
+                </div>
+                <div class="well muted" id="uploadZone" style="display:none;cursor:pointer" data-toggle="modal" data-target="#uploadBox" title="Click here to launch upload manager">
+                    <small id="fileCountLabel">&nbsp;</small>
+                    <small id="timeRemainingLabel" class="pull-right">&nbsp;</small>
+                    <div class="progress" style="margin-bottom:0px">
+                        <div class="bar" id="progress" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--/span-->
+    <div class="span9">
+        <form name="form" ng-submit="save()">
+            <fieldset>
+                <legend ng-hide="task.id">{{task.project.title}}</legend>
+                <legend ng-show="task.id">
+                    {{task.project.title}} ({{task.id}})<br/>
+					<span ng-show="task.dateCreated || task.createdBy" style="font-size: 12px" title="{{task.dateCreated | dateText}}">
+						Created <span ng-show="task.dateCreated">{{task.dateCreated | readableDate }}</span> <span ng-show="task.createdBy">by {{task.createdBy.name}}</span>
+					</span>
+                </legend>
+                <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">
+                    <span ng-bind-html="alert.msg"></span>
+                </alert>
+                <label>Summary</label>
+                <textarea style="width: 75%" type="text" name="summary" ng-model="task.summary" required focus-me placeholder="Task summary" rows="4"></textarea>
+                <span class="error" ng-show="form.summary.$error.required">Required field</span>
+
+                <label>Description</label>
+                <textarea style="width: 75%" type="text" name="description" ng-model="task.description" placeholder="Task description" rows="8"></textarea>
+
+                <label>Assigned To</label>
+                <input type="text" token-input="workers" token-input-hint-text="Type to search user" token-input-no-results-text="No user match found." name="assignedTo" ng-model="assignedTo" />
+
+                <label>CC</label>
+                <input type="text" token-input-width="740px" token-input="users" token-input-hint-text="Type to search user" token-input-no-results-text="No user match found." name="ccList" ng-model="ccList" />
+
+
+
+                <label class="checkbox" ng-show="showNotify" style="padding:10px 0 10px 0;">&nbsp;Send email notification <input style="margin:3px 0 0 0" type="checkbox" ng-model="notify"/></label>
+                <label class="checkbox"></label>
+
+                <button type="submit" class="btn btn-primary">{{ task | cuLabel:'Add':'Update'}}</button>
+                <a href="javascript:history.go(-1)" class="btn">{{ task | cuLabel:'Cancel':'Back'}}</a>
+            </fieldset>
+        </form>
+    </div>
+    <!--/span-->
+</div>
+<div id="uploadBox" style="width:740px;" class="modal hide">
+    <div class="modal-body" style="padding:0px;max-height:460px;">
+        <i id="uploadBoxCloseButton" class="icon-remove"></i>
+        <iframe id="uploader" src="uploader/widget.html" frameborder="0" style="display:block; width:100%!important; min-height:460px"></iframe>
+    </div>
+</div>
+
+<!--/row-->
+<script type="text/javascript">
+    $(function () {
+        $("#uploadBoxCloseButton").click(function () {
+            $("#uploadBox").modal('hide');
+        })
+
+    ;
+    });
+
+    window.uploader = {
+        'url': '../rest/upload', // Path should be relative
+        'headerText': 'Task Files',
+        'doneButtonCallback': function (file) {
+            $("#uploadBox").modal('hide');
+        },
+        'getFileUrl': function (file) {
+            var scope = angular.element($("#uploader")).scope();
+            return scope.getFileUrl(file);
+        },
+        'onFileRemove': function (file) {
+            var scope = angular.element($("#uploader")).scope();
+            return scope.removeFile(file);
+        },
+        'onUploadSuccess': function (file, response) {
+            file.id = response.id;
+            var scope = angular.element($("#uploader")).scope();
+            scope.addFile(response);
+        },
+        'onProgress': function (totalFiles, filesRemaining, speed, timeRemaining, totalBytes, bytesRemaining) {
+            if (bytesRemaining && filesRemaining) {
+                $("#uploadZone").show();
+                $("#noUploadZone").hide();
+                if (filesRemaining == 1) {
+                    $("#fileCountLabel").html(filesRemaining + " file left");
+                } else {
+                    $("#fileCountLabel").html(filesRemaining + " files left");
+                }
+                if (timeRemaining) {
+                    $("#timeRemainingLabel").html(speed + ", " + timeRemaining);
+                }
+                $("#progress").css({
+                    width: ((totalBytes - bytesRemaining) * 100.00 / totalBytes) + '%'
+                });
+            } else {
+                $("#noUploadZone").show();
+                $("#uploadZone").hide();
+            }
+        }
+    };
+</script>

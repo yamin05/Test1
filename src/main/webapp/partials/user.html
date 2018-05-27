@@ -1,0 +1,35 @@
+<div class="row-fluid">
+	<div class="span4 offset4">
+		<form name="form" ng-submit="update()">
+		  <fieldset>
+			<legend>{{ user | cuLabel:'Add New User' :'Update User Information'}}</legend>		    
+			<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+					    
+		    <label>Name</label>
+		    <input type="text" name="name" ng-model="user.name" required focus-me placeholder="Enter your name"/>
+			<span class="error" ng-show="form.name.$error.required">Required field</span>
+
+			<span ng-hide="user.id">
+			    <label>Email</label>
+			    <input type="email" name="email" ng-model="user.email" required placeholder="Enter your email"/>
+				<span class="error" ng-show="form.email.$error.required">Required field</span>
+				<span class="error" ng-show="form.email.$error.email">Invalid email</span>
+			</span>
+			
+			<ul class="nav nav-list" style="padding-left: 0px;">
+				<li><label class="checkbox"><input ng-model="user.active" type="checkbox">Active</label></li>
+				<li class="nav-header">Roles</li>
+				<li class="divider"></li>
+				<li><label class="checkbox"><input ng-model="user.isWorker" type="checkbox">Worker</label></li>
+				<li><label class="checkbox"><input ng-model="user.isManager" type="checkbox">Manager</label></li>			
+				<li><label class="checkbox"><input ng-model="user.isAdmin" type="checkbox">Admin</label></li>
+			</ul>
+						
+			<label class="checkbox"></label>
+			
+			<button type="submit" class="btn btn-primary">{{ user | cuLabel:'Add':'Update'}}</button>		
+			<a href="javascript:history.go(-1)" class="btn">{{ user | cuLabel:'Cancel':'Back'}}</a> 
+		  </fieldset>
+		</form>
+	</div>
+</div>

@@ -1,0 +1,28 @@
+<div class="row-fluid" xmlns="http://www.w3.org/1999/html">
+    <div class="span6 offset4">
+        <form name="form" ng-submit="save()">
+            <fieldset>
+                <legend>{{ group | cuLabel:'Add New Group' :'Update Group Information'}}</legend>
+
+                <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">
+                    <span ng-bind-html="alert.msg"></span>
+                </alert>
+
+                <label>Name</label>
+                <input style="width: 75%" type="text" name="group.name" ng-model="group.name" required focus-me
+                       placeholder="Group name">
+                <span class="error" ng-show="form.name.$error.required">Required field</span>
+
+                <label>Group Users</label>
+                <input type="text" token-input="users" token-input-width="490px"
+                       token-input-hint-text="Type to search user" token-input-no-results-text="No user match found."
+                       name="groupUser" ng-model="groupUser"/>
+
+                </br>
+
+                <button type="submit" class="btn btn-primary">{{ group | cuLabel:'Add':'Update'}}</button>
+                <a href="javascript:history.go(-1)" class="btn">{{ group | cuLabel:'Cancel':'Back'}}</a>
+            </fieldset>
+        </form>
+    </div>
+</div>

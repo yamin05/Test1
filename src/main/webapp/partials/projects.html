@@ -1,0 +1,14 @@
+<div class="row-fluid">
+	<div class="span8 offset4">
+		<div class="span3 bs-docs-sidebar">
+			<legend style="border-bottom:0px;">
+				{{ type }} Projects
+				<div ng-show="projects.length"  style="font-size:12px;">Total: {{ projects.length }}</div>
+				<div ng-hide="projects.length"  style="font-size:12px;">No projects here</div>
+			</legend>
+			<ul class="nav nav-list bs-docs-sidenav">
+				<li ng-repeat="project in projects"><a href="#/project-tasks/{{project.id}}"><i class="icon-chevron-right"></i> {{project.title}}</a></li>
+	        </ul>
+        </div>
+	</div>
+</div>

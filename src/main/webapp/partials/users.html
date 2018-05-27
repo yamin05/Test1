@@ -1,0 +1,86 @@
+<div class="row-fluid">
+    <div class="span3">
+        <div class="well sidebar-nav sidebar-nav-fixed">
+            <ul class="nav nav-list">
+                <li class="nav-header">Sort <i class="{{ sortClass() }} icon-white"/></li>
+                <li>
+                    <div class="btn-toolbar" style="margin: 0 0 0px">
+                        <div class="btn-group">
+                            <button class="btn" ng-click="toggleSort()" title="Click to toggle sort">{{orderBy |
+                                usersOrderByText}}
+                            </button>
+                            <button class="btn dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a href="" ng-click="switchToSortType(0)">Name</a></li>
+                                <li><a href="" ng-click="switchToSortType(1)">Email</a></li>
+                                <li><a href="" ng-click="switchToSortType(2)">Last activity</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-header"><i class="icon-search icon-white"></i>&nbsp;Search</li>
+                <li>
+                    <form ng-submit="search()" style="margin: 0 0 0px">
+                        <div class="input-append input-block-level">
+                            <input type="text" ng-model="text" class="span9" name="text" focus-me
+                                   placeholder="Enter text to search"/>
+						<span style="cursor: pointer" ng-click="text='';search();"
+                              class="add-on"><i class="icon-remove-sign"></i></span>
+                        </div>
+                    </form>
+                </li>
+                <li class="nav-header">Total : {{totalItems}}</li>
+                <li class="nav-header" style="margin-bottom:10px">&nbsp;</li>
+                <li class="divider"></li>
+                <li><a class="nav-header" style="cursor:pointer" href="#/user/">Create New User</a></li>
+            </ul>
+        </div>
+        <!--/.well -->
+    </div>
+    <!--/span-->
+    <div class="span9" infinite-scroll="loadPage()" infinite-scroll-disabled="scrollDisabled()"
+         infinite-scroll-distance="2">
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+        <table class="table table-hover table-fixed-header sortable">
+            <thead>
+            <tr>
+                <th style="cursor:pointer;width:180px;">Name</th>
+                <th style="cursor:pointer;width:90px">Email</th>
+                <th style="cursor:pointer;text-align:center">Active</th>
+                <th style="cursor:pointer;text-align:center">Worker</th>
+                <th style="cursor:pointer;text-align:center">Manager</th>
+                <th style="cursor:pointer;text-align:center">Admin</th>
+                <th style="cursor:pointer; text-align:center;width:120px;">Last Activity</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr td style="cursor:pointer" ng-click="openDialog($index)" ng-repeat="item in items"
+                context-menu-show="loggedUser.isAdmin" context-menu="contextMenu" context-menu-click="menuClick(item)">
+                <td><span ng-bind-html="item.name | highlight:searchText"></span></td>
+                <td><span ng-bind-html="item.email | highlight:searchText"></span></td>
+                <td style="text-align:center"><i class="icon-ok text-center" ng-show="item.active"></i>&nbsp;</td>
+                <td style="text-align:center"><i class="icon-ok text-center" ng-show="item.isWorker"></i>&nbsp;</td>
+                <td style="text-align:center"><i class="icon-ok text-center" ng-show="item.isManager"></i>&nbsp;</td>
+                <td style="text-align:center"><i class="icon-ok text-center" ng-show="item.isAdmin"></i>&nbsp;</i></td>
+                <td title="{{item.dateLastActivity | dateText }}" style="text-align: center">{{item.dateLastActivity |
+                    readableDate }}
+                </td>
+            </tr>
+            <tr ng-show="busy">
+                <td colspan="3">Loading data ...</td>
+            </tr>
+            <tr ng-hide="busy || items.length">
+                <td colspan="3">No items found.</td>
+            </tr>
+            </tbody>
+        </table>
+        <ul id="contextMenu" class="dropdown-menu" style="cursor:pointer">
+            <li><a ng-click="editUser()"><i class="icon-edit"></i>&nbsp;Edit</a></li>
+            <li><a ng-show="items.length>1" ng-click="deleteUser()"><i class="icon-remove"></i>&nbsp;Delete</a></li>
+        </ul>
+    </div>
+    <!--/span-->
+</div>
+<!--/row-->

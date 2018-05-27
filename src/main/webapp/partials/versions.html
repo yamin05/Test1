@@ -1,0 +1,56 @@
+<div class="row-fluid">
+	<div class="span3">
+		<div class="well sidebar-nav sidebar-nav-fixed">
+			<ul class="nav nav-list">
+				<li class="dropdown nav-header inline">{{project.title}}</li>				
+				<li class="nav-header"><i class="icon-search icon-white"></i>&nbsp;Search</li>
+				<li>
+					<form ng-submit="search()" style="margin: 0 0 0px">
+					<div class="input-append input-block-level">
+						<input type="text" ng-model="text" class="span9" focus-me name="text" placeholder="Enter text to search"/>
+						<span style="cursor: pointer" ng-click="text='';search();"
+							class="add-on"><i class="icon-remove-sign"></i></span>
+					</div>
+	    			</form>
+	    		</li>
+				<li class="nav-header">Total : {{totalItems}}</li>
+				<li class="nav-header" style="margin-bottom:10px">&nbsp;</li>
+				<li class="divider"></li>
+				<li><a class="nav-header" style="cursor:pointer" ng-show="loggedUser.isAdmin || loggedUser.isManager" href="#/version/{{project.id}}/">Start New Version</a></li>
+				<li><a class="nav-header" style="cursor:pointer" href="javascript:history.go(-1)">Go to Project</a></li>
+			</ul>
+		</div>
+		<!--/.well -->
+	</div>
+	<!--/span-->
+	<div class="span9" infinite-scroll="loadPage()"  infinite-scroll-disabled="scrollDisabled()" infinite-scroll-distance="2">
+		<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+		<table class="table table-hover table-fixed-header">
+			<thead>
+				<tr>
+					<th style="cursor:pointer">Version</th>			
+					<th style="cursor:pointer">Date</th>
+					<th style="cursor:pointer">Changelog</th>					
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-click="viewVersion($index)" style="cursor:pointer" ng-click="viewVersionDesktop($index)" ng-repeat="item in items" context-menu="contextMenu" context-menu-click="menuClick(item)">
+					<td><span ng-bind-html="item.name | highlight:searchText"></span></td>
+					<td>{{item.versionDate | dateText }}</td>
+					<td><span ng-bind-html="item.changelog | truncate:110 | highlight:searchText"></span></td>
+				</tr>
+				<tr ng-show="busy">
+					<td colspan="2">Loading data ...</td>
+				</tr>
+				<tr ng-hide="busy || items.length">
+					<td colspan="2">No items found.</td>
+				</tr>
+			</tbody>
+		</table>
+		<ul id="contextMenu" class="dropdown-menu" style="cursor:pointer">
+	      <li><a ng-show="loggedUser.isAdmin || loggedUser.isManager" ng-click="editVersion()"><i class="icon-edit"></i>&nbsp;Edit</a></li>
+	    </ul>	
+	</div>
+	<!--/span-->
+</div>
+<!--/row-->

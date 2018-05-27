@@ -1,0 +1,31 @@
+<div class="row-fluid">
+	<!--/span-->
+	<div class="span12" infinite-scroll="loadPage()"  infinite-scroll-disabled="scrollDisabled()" infinite-scroll-distance="2">
+		<legend style="border-bottom:0px;">Changelog for {{version.project.title}}</legend>
+		<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+		<form name="form" ng-submit="save()" class="form-inline">
+			<fieldset>
+				<label>Version</label>
+				<input type="text" class="input-medium" placeholder="Version" name="version" tooltip="{{ errorText(form.version.$error) }}" required ng-model="version.name">
+
+				<label>Date</label>
+				<div class="input-append date">
+					<input style="cursor: pointer" class="input-medium" type="text" ui-date="dateOptions" ng-model="version.versionDate">
+				</div>
+
+				<button type="submit" class="btn btn-primary">{{ version | cuLabel:'Save':'Update'}}</button>
+				<a href="javascript:history.go(-1)" class="btn">{{ version | cuLabel:'Cancel':'Back'}}</a> 
+
+				<div style="padding-top:10px;">
+					<textarea style="width: 98%" type="text" name="changelog" tooltip="{{ errorText(form.changelog.$error) }}" required ng-model="version.changelog" rows="20"></textarea>
+				</div> 
+				<div style="padding-top:10px;">
+					<button type="button" class="btn inline" ng-model="excludeTaskId" btn-checkbox btn-checkbox-true="true" btn-checkbox-false="false">Exclude Task Id</button>
+				</div>
+				 
+			</fieldset>
+		</form>
+	</div>
+	<!--/span-->
+</div>
+<!--/row-->

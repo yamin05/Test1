@@ -1,0 +1,14 @@
+<div class="row-fluid" ng-init="excludeTaskId=true">
+	<!--/span-->
+	<div class="span7 offset2" infinite-scroll="loadPage()"  infinite-scroll-disabled="scrollDisabled()" infinite-scroll-distance="2">
+		<legend style="border-bottom:0px;margin-bottom: 0px;">
+			{{version.project.title}}
+			<div style="font-size:12px;">Changelog from date: {{version.versionDate | dateText }}, version <span ng-bind-html="version.name | highlight:searchText"></span></div>
+		</legend>
+		<pre style="margin:20px 0 20px 0" ng-bind-html="version.changelog | highlight:searchText">{{version.changelog}}</pre>
+		<a ng-show="loggedUser.isAdmin || loggedUser.isManager" href="#/version/{{version.project.id}}/{{version.id}}" class="btn btn-primary" ><i class="icon-edit"></i>&nbsp;Edit</a>
+		<a href="javascript:history.go(-1)" class="btn">Back</a> 
+	</div>
+	<!--/span-->
+</div>
+<!--/row-->

@@ -1,0 +1,34 @@
+<div class="row-fluid">
+	<div class="span4 offset4">
+		<form name="form" ng-submit="save()">
+			<fieldset>
+				<legend>{{ project | cuLabel:'Add New Project':'Update Project'}}</legend>
+				<alert ng-repeat="alert in alerts" type="alert.type"
+					close="closeAlert($index)">{{alert.msg}}</alert>
+
+				<label>Title</label> <input type="text" name="title"
+					ng-model="project.title" required focus-me
+					placeholder="Enter project title" /> <span class="error"
+					ng-show="form.title.$error.required">Required field</span>
+					
+										
+				<label>CC</label> 
+				<input type="text" token-input-width="318px" token-input="users"
+					token-input-hint-text="Type to search user"
+					token-input-no-results-text="No user match found."
+					name="cclist" ng-model="ccList" />
+
+				<label class="checkbox"></label>
+				<ul class="nav nav-list" style="padding-left: 0px;">
+					<li><label class="checkbox"><input ng-model="project.share" type="checkbox">Share Project</label></li>
+				</ul>
+
+				<label class="checkbox"></label>
+				<button type="submit" class="btn btn-primary">{{ project |
+					cuLabel:'Add':'Update'}}</button>
+				<a href="javascript:history.go(-1)" class="btn">{{ project |
+					cuLabel:'Cancel':'Back'}}</a>
+			</fieldset>
+		</form>
+	</div>
+</div>

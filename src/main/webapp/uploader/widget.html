@@ -1,0 +1,221 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">
+<head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>File Upload</title>
+<script type="text/javascript" src="./js/jquery-1.9.1.js"></script>
+<script type="text/javascript" src="./js/html5-uploader.js"></script>
+<link href="./css/bootstrap.min.css" rel="stylesheet" media="screen" />
+<style type="text/css">
+#container {
+	
+}
+
+#uploader {
+	display: none;
+}
+
+#uploader .btn,#html5-uploader .btn {
+	position: relative;
+	overflow: hidden;
+}
+
+#uploader .btn input,#html5-uploader .btn input {
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	font-size: 20px;
+	cursor: pointer;
+	opacity: 0;
+	filter: alpha(opacity = 0);
+}
+
+#header {
+	position: fixed;
+	left: 0px;
+	top: 0px;
+	height: 30px;
+	width: 100%;
+	z-index: 10;
+	border-bottom: 1px solid #eee;
+	padding: 15px;
+}
+
+#statusZoneContainer {
+	margin: 0px;
+	position: fixed;
+	top: 62px;
+	overflow-y: auto;
+	width: 100%;
+}
+
+ul#statusZone {
+	margin: 15px;
+	border: 1px solid #b9b9b9;
+}
+
+#footer {
+	position: fixed;
+	left: 0px;
+	bottom: 0px;
+	height: 30px;
+	width: 100%;
+	z-index: 10;
+	border-top: 1px solid #eee;
+	padding: 15px;
+	background-color: #f5f5f5;
+}
+
+ul#statusZone li {
+	border-top: 1px solid #ddd;
+	position: relative;
+	height: 36px;
+}
+
+ul#statusZone li .msg {
+	position: absolute;
+	top: 22%;
+	width: 100%;
+}
+
+ul#statusZone div.filename {
+	padding-left: 15px;
+	color:#444;
+	width:45%;
+	min-width:334px;
+	display: inline-block;
+}
+
+ul#statusZone div.foldername {
+	padding-left: 15px;
+	padding-right: 15px;
+	color:#444;
+	width:30%;
+	min-width: 242px;
+	display: inline-block;
+}
+
+ul#statusZone li div.info {
+	top: 22%;
+	display: none;
+}
+
+ul#statusZone li.status-pending div.info {
+	padding-left: 5px;
+	padding-right: 5px;
+	position: absolute;
+	top: 0;
+	right: 30px;
+	display: block;	
+}
+
+li.status-pending div.spinner {
+	background-image: url('./img/spinner.gif');
+	background-repeat: no-repeat;
+	background-position: center;
+	height: 20px;
+	width: 16px;
+	padding-left: 5px;
+	padding-right: 15px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: block;	
+}
+
+li.status-success div.success-icon {
+	background-image: url('./img/success-icon.png');
+	background-repeat: no-repeat;
+	background-position: center;
+	height: 20px;
+	width: 16px;
+	padding-left: 5px;
+	padding-right: 15px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: block;	
+}
+
+li.status-success div.success-icon:hover
+{
+    background-image: url('./img/remove-icon.png');
+    cursor:pointer;
+}
+
+li.status-error div.error-icon {
+	background-image: url('./img/error-icon.png');
+	background-repeat: no-repeat;
+	background-position: center;
+	height: 20px;
+	width: 16px;
+	padding-left: 5px;
+	padding-right: 15px;
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: block;	
+}
+
+ul#statusZone li.status-pending .bg {
+	height: 35px;
+	background-color: #e9f4ff;
+}
+
+ul#statusZone li.status-success .bg {
+	height: 35px;
+	background-color: #ebffd9;
+}
+
+ul#statusZone li.status-error .bg {
+	height: 35px;
+	background-color: #f2dede;
+}
+
+#upload_iframe {
+	display: none
+}
+
+#globalInfo {
+	height: 30px;
+	display: inline-block;
+	margin-left: 15px;
+	margin-right: 30px;
+}
+</style>
+</head>
+<body>
+	<div id="container">
+		<div id="header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">
+				<i class="icon-remove" title="Close" style="cursor: pointer"></i>
+			</button>
+			<h4 id="headerLabel">Uploads</h4>
+		</div>
+		<div id="statusZoneContainer">
+ 			<ul id="statusZone" class="nav nav-tabs nav-stacked"></ul>
+ 			<div id="footer">
+				<form id="html5-uploader">
+					<div class="btn btn-primary">
+						<span>Add files</span> <input type="file" name="file"
+							multiple="multiple" id="html5-input-file" />
+					</div>
+					<button class="btn btn-primary doneBtn" type="button">Close</button>
+					<div id="globalInfo" class="pull-right"></div>
+				</form>
+				<form id="uploader" method="post" enctype="multipart/form-data">
+					<div class="btn btn-primary">
+						<span>Add a file</span> <input type="file" name="file"
+							id="input-file" />
+					</div>
+					<button class="btn btn-primary doneBtn" type="button">Close</button>
+					<iframe id="upload_iframe" name="upload_iframe" src=""></iframe>
+				</form>
+			</div>
+		</div>
+     </div>
+</body>
+</html>

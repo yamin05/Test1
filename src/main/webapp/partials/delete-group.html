@@ -1,0 +1,12 @@
+<div class="row-fluid">
+    <div class="span4 offset4">
+        <form name="form" ng-submit="deleteGroup()">
+            <fieldset>
+                <legend>Delete Group : {{group.name}}</legend>
+                <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+                <button type="submit" class="btn btn-primary">Delete</button>
+                <a href="javascript:history.go(-1)" class="btn">Back</a>
+            </fieldset>
+        </form>
+    </div>
+</div>

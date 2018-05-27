@@ -1,0 +1,25 @@
+<div class="row-fluid">
+	<div class="span4 offset4">
+		<form name="form" ng-submit="deleteUser()">
+		  <fieldset>
+		    <legend>Delete User : {{user.name}}</legend>
+			<alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+					    
+		    <label>Replacement User</label>
+			<div class="btn-group">
+				<button class="btn dropdown-toggle">{{replacementUser.name}}&nbsp;</button>
+				<button class="btn dropdown-toggle" data-toggle="dropdown">
+					<span class="caret"></span>
+				</button>
+				<ul class="dropdown-menu">
+					<li ng-repeat="u in users | filter:isDifferent"><a href="" ng-click="select(u)">{{u.name}}</a></li>
+				</ul>
+			</div>
+			
+			<label class="checkbox"></label>
+			<button type="submit" class="btn btn-primary">Delete</button>
+			<a href="javascript:history.go(-1)" class="btn">Back</a>
+		  </fieldset>
+		</form>
+	</div>
+</div>

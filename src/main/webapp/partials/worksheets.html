@@ -1,0 +1,13 @@
+<div class="row-fluid">
+	<div class="span8 offset4">
+		<div class="span3 bs-docs-sidebar">
+			<legend style="border-bottom:0px;">
+				Worksheets
+				<div style="font-size:12px;">Total users: {{ users.length }}</div>
+			</legend>
+			<ul class="nav nav-list bs-docs-sidenav">
+				<li ng-repeat="user in users | orderBy:'name'"><a href="#/user-tasks/{{user.id}}"><i class="icon-chevron-right"></i> {{user.name}}</a></li>
+	        </ul>		
+        </div>
+	</div>
+</div>

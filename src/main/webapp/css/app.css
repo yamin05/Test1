@@ -1,0 +1,173 @@
+/* app css stylesheet */
+
+body {
+	padding-top: 60px;
+	padding-bottom: 40px;
+}
+
+.menu {
+  list-style: none;
+  border-bottom: 0.1em solid black;
+  margin-bottom: 2em;
+  padding: 0 0 0.5em;
+}
+
+.menu:before {
+  content: "[";
+}
+
+.menu:after {
+  content: "]";
+}
+
+.menu > li {
+  display: inline;
+}
+
+.menu > li:before {
+  content: "|";
+  padding-right: 0.3em;
+}
+
+.menu > li:nth-child(1):before {
+  content: "";
+  padding: 0;
+}
+
+.center {
+    text-align:center;
+}
+
+.center form {
+    display:inline-block;
+}
+
+.sidebar-nav-fixed {
+     position:fixed;
+     top:60px;
+     width:270px;
+}
+
+.sidebar-nav {
+	padding: 9px 0;
+}
+
+@media (max-width: 979px) {
+	body {
+		padding-top: 0px;
+	}
+	.sidebar-nav-fixed {
+		position: static;
+		width: auto;
+	}
+}
+
+/*----------------------------------------------------------------
+	TASKS
+---------------------------------------------------------------- */
+.task {
+	margin: 0px;
+	padding: 0px 18px 3px 24px;
+}
+
+.task p {
+	font-size: 12px;
+	color: #444;
+	line-height: 160%;
+	margin: 0 0 15px 0;
+}
+
+/*//
+	Meta content
+//*/
+.task p.meta {
+	color: #999;
+	overflow: auto;
+	margin: 0px;
+	font-size: 11px;
+	width: 100%;
+	cursor:pointer;
+}
+
+.task p.meta span.task-date,
+.task p.meta span.task-contact, 
+.task p.meta span.task-priority,
+.task p.meta span.task-low,
+.task p.meta span.task-low-medium,
+.task p.meta span.task-medium,
+.task p.meta span.task-high-medium,
+.task p.meta span.task-high
+	{
+	background: url('../img/12px-icons.png') left 3px no-repeat;
+	padding: 0px 0 0 16px;
+	margin: 0 10px 0 0;
+	line-height: 150%;
+}
+
+.task p.meta span.task-date {
+	background: url('../img/12px-icons.png') left 1px no-repeat;
+}
+
+.task p.meta span.task-contact {
+	background: url('../img/12px-icons.png') left -325px no-repeat;
+}
+
+.task p.meta span.task-priority {
+	background: url('../img/12px-icons.png') left -51px no-repeat;
+}
+
+.task p.meta span.task-low {
+	background: url('../img/12px-icons.png') left -113px no-repeat;
+}
+
+.task p.meta span.task-low-medium {
+	background: url('../img/12px-icons.png') left -380px no-repeat;
+}
+
+.task p.meta span.task-medium {
+	background: url('../img/12px-icons.png') left -180px no-repeat;
+}
+
+.task p.meta span.task-high-medium {
+	background: url('../img/12px-icons.png') left -269px no-repeat;
+}
+
+.task p.meta span.task-high {
+	background: url('../img/12px-icons.png') left -227px no-repeat;
+}
+
+legend {
+	line-height: 25px;
+}
+
+pre {
+	word-break:normal;
+}
+
+.row-fluid {
+	min-height: 300px;
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none;
+}
+
+.modal-body {
+    max-height: 200px;
+}
+
+.search-highlight {
+	color: #468847;
+	background-color: #dff0d8;
+	border-color: #d6e9c6;
+}
+.navbar-inner .container-fluid {
+	padding-left:0px;
+}
+
+#uploadBoxCloseButton {
+	position: absolute;
+	right:10px;
+	top:10px;
+	cursor:pointer;
+}

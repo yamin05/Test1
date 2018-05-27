@@ -1,0 +1,111 @@
+<div class="row-fluid">
+    <!--/span-->
+
+    <!--    <div class="span3 bs-docs-sidebar" style="padding-top: 0px;">
+            <ul class="nav nav-list bs-docs-sidenav">
+                <li ng-repeat="gu in group.groupUsers | orderBy:'member.name'"><a
+                        href="#/group-user-task/{{group.id}}/{{gu.member.id}}"><i class="icon-chevron-right"></i>{{gu.member.name}}</a>
+                </li>
+            </ul>
+        </div>-->
+
+    <div class="span12">
+        {{test}}
+        <legend style="border-bottom:0px;">
+            On going tasks of {{group.name}} group
+            <div style="font-size:16px;">{{assignee.name}}</div>
+            <div style="font-size:12px;">{{ totalItemsText() }}</div>
+        </legend>
+        <alert ng-repeat="alert in alerts" type="alert.type" close="closeAlert($index)">{{alert.msg}}</alert>
+        <table class="table table-hover table-fixed-header">
+            <tbody>
+            <tr ng-repeat="item in items" class="task" context-menu="contextMenu"
+                context-menu-click="menuClick($index)">
+                <td style="width:100%; cursor:pointer" data-toggle="collapse" data-target="#collapse{{$index}}">
+
+                    <div ng-bind-html-unsafe="item.summary | highlightSummary:item.id:searchedTaskId"></div>
+
+                    <p class="meta" style="margin-top:6px">
+							<span class="task-priority task-{{item.priority | priorityText | lowercase}}"
+                                  title="{{item.priority | priorityText}}">
+								<span ng-show="item.urgent && item.priority == 5" class="label label-important"
+                                      style="line-height:9px;font-size:9px">urgent</span>&nbsp;
+								<span ng-show="item.minor && item.priority == 5" class="label label-success"
+                                      style="line-height:9px;font-size:9px">minor</span>&nbsp;
+								<span style="color:#666;">{{item.id}}</span>
+								<span style="margin-left:10px;color:{{item.taskStatus | statusColor}};"
+                                      ng-bind-html="item.taskStatus | statusText"></span>
+							</span>
+							<span class="task-contact" ng-show="item.assignedTo">
+								{{item.createdBy.name}}&nbsp;&rarr;&nbsp;
+                                <span ng-repeat="tu in item.assignedTo | orderBy:'assignee.name'"><span><a
+                                        href="#/user-tasks/{{tu.assignee.id}}/{{item.id}}"
+                                        ng-bind-html-unsafe="tu.assignee.name | highlight:searchText"></a><span
+                                        ng-hide="$last">, </span></span></span>
+							</span>
+							<span class="task-contact" ng-hide="item.assignedTo">
+								{{item.createdBy.name}}
+							</span>
+							<span class="task-date" ng-show="item.dateCreated" title="{{item.dateCreated | dateText}}">
+								Created {{item.dateCreated | readableDate }} <span ng-show="item.createdBy">by {{item.createdBy.name}}</span>
+							</span>
+							<span class="task-date" ng-show="item.dateLastUpdated"
+                                  title="{{item.dateLastUpdated | dateText}}">
+								Last updated {{item.dateLastUpdated | readableDate }} <span
+                                    ng-show="item.lastUpdatedBy">by {{item.lastUpdatedBy.name}}</span>
+							</span>
+							<span class="task-date" ng-show="item.dateCompleted"
+                                  title="{{item.dateCompleted | dateText}}">
+								Finished {{item.dateCompleted | readableDate }}
+							</span>
+							<span class="pull-right">
+								<a href="#/project-tasks/{{item.project.id}}"><b>{{item.project.title }}</b></a>
+							</span>
+                    </p>
+
+                    <div id="collapse{{$index}}" class="collapse" style="margin-top:10px;">
+					    	<span class="pull-right">
+	      						<a ng-click="placeHere($index)" ng-show="moveHereVisible($index)"><i
+                                        class="icon-download-alt"></i> Place Here</a>&nbsp;
+	      						<a ng-click="reorder($index)" ng-show="loggedUser.isManager"><i
+                                        class="icon-resize-vertical"></i> Reorder</a>&nbsp;
+						    	<a ng-show="isCreator || isAssignee || loggedUser.isAdmin || loggedUser.isManager"><a
+                                        ng-click="editTask($index)"><i class="icon-edit"></i>&nbsp;Edit</a>&nbsp;
+                                    <a ng-show="isCreator || loggedUser.isAdmin || loggedUser.isManager"
+                                       ng-click="deleteTask($index)"><i class="icon-remove"></i>&nbsp;Delete</a>
+					    	</span>
+                        <pre style="margin-top: 25px;color:#999" ng-hide="item.description || item.files.length">No details available.</pre>
+                        <pre style="margin-top: 25px;" ng-show="item.description || item.files.length"
+                             ng-bind-html-unsafe="item | details:searchText"></pre>
+                        <p class="meta" style="margin-top:6px">
+								<span class="task-date" ng-show="item.dateCreated"
+                                      title="{{item.dateCreated | dateText}}">
+									Created {{item.dateCreated | readableDate }} <span ng-show="item.createdBy">by {{item.createdBy.name}}</span>
+								</span>
+								<span class="task-date" ng-show="item.dateAssigned"
+                                      title="{{item.dateAssigned | dateText}}">
+									Task assigned {{item.dateAssigned | readableDate }}
+								</span>
+                        </p>
+                    </div>
+                </td>
+            </tr>
+
+            <tr ng-show="busy">
+                <td>Loading data ...</td>
+            </tr>
+
+            <tr ng-hide="busy || items.length">
+                <td>No items found.</td>
+            </tr>
+
+            </tbody>
+        </table>
+        <ul id="contextMenu" class="dropdown-menu" style="cursor:pointer">
+            <li><a ng-click="editTask()"><i class="icon-edit"></i> Edit</a></li>
+            <li><a ng-show="loggedUser.isManager" ng-click="deleteTask()"><i class="icon-remove"></i> Delete</a></li>
+        </ul>
+    </div>
+    <!--/span-->
+</div>
+<!--/row-->
